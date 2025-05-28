@@ -56,8 +56,10 @@ LIMIT 10;
 Here's the breakdown of the top data analyst jobs in 2023:
 - **Wide Salary Range:** The top 10 highest-paying data analyst roles range from $184,000 to $650,000, showing just how high the salary ceiling can be in this field.
 - **Diverse Employers:** Companies like SmartAsset, Meta, and AT&T are offering top compensation, highlighting strong demand across industries—from tech to finance to telecom.
-- **Job Title Variety:** High-paying roles span a wide spectrum of titles, from “Data Analyst” to “Director of Analytics,” reflecting the different levels of responsibility and specialization within the data analytics space.
+- **Job Title Variety:** High-paying roles span a wide spectrum of titles, from “Data Analyst” to “Director of Analytics,” reflecting the different levels of responsibility and specialization within the data analytics space.  
 
+![Top Paying Roles](project_sql/1_top_paying_roles.png)  
+_Bar graph visualizing the salary for the top 10 salaries for data analysts; ChatGPT generated this graph from my SQL query results_
 ### 2. Skills for Top Paying Jobs
 To figure out what skills are actually required for the top-paying data analyst roles, I joined the job postings with the skills data. This helped me identify which tools and technologies employers are looking for when offering the highest salaries.
 
@@ -88,9 +90,12 @@ INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
 ORDER BY salary_year_avg DESC;
 ```
 Here’s the breakdown of the most in-demand skills from the top 10 highest-paying data analyst jobs in 2023:  
-**SQL** – 8 mentions  
-**Python** – 7 mentions  
-**Tableau** – 6 mentions
+- **SQL** is leading with a count of 8.  
+- **Python** follows closely with a count of 7.  
+- **Tableau** is also very sought after with a count of 6. Other skills like **R, Snowflake, Pandas,** and **Excel** show varying degrees of demand.  
+
+![Skills for Top Paying Roles](project_sql/2_top_paying_roles_skills.png)  
+_Bar graph visualizing the count of skills for the top 10 paying jobs for data analysts; ChatGPT generated this graph from my SQL query results_
 
 ### 3. In-Demand Skills for Data Analysts
 This query helped identify the skills most frequently requested in job postings, directing focus to areas with high demand.
@@ -171,7 +176,44 @@ Here's a breakdown of the results for top-paying skills for Data Analysts:
 
 _Table of the most optimal skills for data analyst sorted by salary_
 
-### Most Optimal Skills for Data Analysts in 2023
+### 5. Most Optimal Skills to Learn
+
+```sql
+SELECT
+    skills_dim.skill_id,
+    skills_dim. skills,
+    COUNT(skills_job_dim.job_id) AS demand_count,
+    ROUND(AVG(job_postings_fact.salary_year_avg), 0) AS avg_salary
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim. skill_id = skills_dim. skill_id
+WHERE
+    job_title_short = 'Data Analyst'
+    AND salary_year_avg IS NOT NULL
+    AND job_work_from_home = True
+GROUP BY
+    skills_dim.skill_id
+HAVING
+    COUNT(skills_job_dim.job_id) > 10
+ORDER BY
+    avg_salary DESC,
+    demand_count DESC
+LIMIT 25;
+```
+| Skill ID | Skill        | Demand Count | Average Salary ($) |
+|----------|--------------|---------------|---------------------|
+| 8        | Go           | 27            | 115,320             |
+| 234      | Confluence   | 11            | 114,210             |
+| 97       | Hadoop       | 22            | 113,193             |
+| 80       | Snowflake    | 37            | 112,948             |
+| 74       | Azure        | 34            | 111,225             |
+| 77       | BigQuery     | 13            | 109,654             |
+| 76       | AWS          | 32            | 108,317             |
+| 4        | Java         | 17            | 106,906             |
+| 194      | SSIS         | 12            | 106,683             |
+| 233      | Jira         | 20            | 104,918             |
+
+_Table of the most optimal skills for data analysts sorted by salary_  
 
 Based on my analysis of job postings, here's a breakdown of the most optimal skills to focus on as an aspiring data analyst:
 
